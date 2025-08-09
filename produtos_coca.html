@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio de Produtos Coca-Cola</title>
+    <link rel="icon" type="image/png" href="coca.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #E30613; /* Cor da Coca-Cola */
+        }
+        .categoria-principal {
+            color: #E30613;
+            border-bottom: 2px solid #E30613;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 20px;
+        }
+        .item-cardapio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .item-cardapio:last-child {
+            border-bottom: none;
+        }
+        .item-cardapio h4 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .quantidade {
+            display: flex;
+            align-items: center;
+        }
+        .quantidade button {
+            background-color: #E30613;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        .quantidade input {
+            width: 40px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #total-pedido {
+            margin-top: 20px;
+            font-size: 1.3em;
+            text-align: right;
+            font-weight: bold;
+        }
+        #btn-finalizar {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #25D366; /* Cor do WhatsApp */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #btn-finalizar:hover {
+            background-color: #128C7E;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cardápio de Produtos Coca-Cola</h1>
+    <div id="cardapio-lista">
+    </div>
+    <div id="total-pedido">Total de itens: 0</div>
+    <button id="btn-finalizar">Finalizar Pedido via WhatsApp</button>
+</div>
+
+<script>
+    const produtos = {
+        "Refrigerantes": {
+            "Coca-Cola": [
+                "Coca-Cola 2.5L",
+                "Coca-Cola Zero 2L",
+                "Coca-Cola Zero Retornável 2L",
+                "Coca-Cola 2L",
+                "Coca-Cola Retornável 2L",
+                "Coca-Cola 1.5L",
+                "Coca-Cola Zero 1.5L",
+                "Coca-Cola 1 Litro Pet",
+                "Coca-Cola Zero 1 Litro Pet",
+                "Coca-Cola 1 Litro LS",
+                "Coca-Cola Zero 1 Litro LS",
+                "Coca-Cola 600ml",
+                "Coca-Cola Zero 600ml",
+                "Coca-Cola Lata 350ml",
+                "Coca-Cola Zero Lata 350ml",
+                "Coca-Cola KS 290ml",
+                "Coca-Cola Zero KS 290ml",
+                "Coca-Cola 220ml Lata",
+                "Coca-Cola Zero 220ml Lata",
+                "Coca-Cola NS 200 ml"
+            ],
+            "Fanta": [
+                "Fanta Laranja 2L",
+                "Fanta Laranja Retornável 2L",
+                "Fanta Laranja 1.5L",
+                "Fanta Laranja 1 Litro Pet",
+                "Fanta Laranja 1 Litro LS",
+                "Fanta Laranja Lata 350ml",
+                "Fanta Laranja 200ml",
+                "Fanta Uva 2L",
+                "Fanta Uva Retornável 2L",
+                "Fanta Uva 1.5L",
+                "Fanta Uva 1 Litro Pet",
+                "Fanta Uva 1 Litro LS",
+                "Fanta Uva Lata 350ml"
+            ],
+            "Sprite": [
+                "Sprite 2L",
+                "Sprite Retornável 2L",
+                "Sprite 1.5L",
+                "Sprite 1 Litro Pet",
+                "Sprite 1 Litro LS",
+                "Sprite Lata 350ml"
+            ],
+            "Guaraná Tuchaua": [
+                "Guaraná Tuchaua 2L",
+                "Guaraná Tuchaua Retornável 2L",
+                "Guaraná Tuchaua 1.5L",
+                "Guaraná Tuchaua 1 Litro Pet",
+                "Guaraná Tuchaua 1 Litro LS",
+                "Guaraná Tuchaua Lata 350ml",
+                "Guaraná Tuchaua KS 290ml",
+                "Guaraná Tuchaua 200ml"
+            ]
+        },
+        "Cervejas": {
+            "Heineken": [
+                "Heineken Long Neck 330ml",
+                "Heineken Lata 350ml",
+                "Heineken 600ml"
+            ],
+            "Amstel": [
+                "Amstel Long Neck 330ml",
+                "Amstel Lata 350ml",
+                "Amstel 600ml",
+                "Amstel 1L"
+            ],
+            "Eisenbahn": [
+                "Eisenbahn Pilsen Long Neck 355ml",
+                "Eisenbahn Lata 350ml",
+                "Eisenbahn Pale Ale 355ml",
+                "Eisenbahn IPA 355ml"
+            ]
+        },
+        "Água": {
+            "Água Mineral": [
+                "Água Mineral 500ml",
+                "Água Mineral 1.5L"
+            ]
+        }
+    };
+
+    const cardapioLista = document.getElementById('cardapio-lista');
+    const totalPedidoElement = document.getElementById('total-pedido');
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    let pedido = {};
+    let allProducts = [];
+
+    function renderizarCardapio() {
+        cardapioLista.innerHTML = '';
+        allProducts = []; 
+        let productIndex = 0;
+
+        for (const categoriaPrincipal in produtos) {
+            const h2 = document.createElement('h2');
+            h2.classList.add('categoria-principal');
+            h2.textContent = categoriaPrincipal;
+            cardapioLista.appendChild(h2);
+
+            for (const marca in produtos[categoriaPrincipal]) {
+                const h3 = document.createElement('h3');
+                h3.textContent = marca;
+                cardapioLista.appendChild(h3);
+
+                produtos[categoriaPrincipal][marca].forEach(produto => {
+                    const div = document.createElement('div');
+                    div.classList.add('item-cardapio');
+                    div.innerHTML = `
+                        <h4>${produto}</h4>
+                        <div class="quantidade">
+                            <button onclick="mudarQuantidade(${productIndex}, -1)">-</button>
+                            <input type="number" id="qtd-${productIndex}" value="0" min="0" onchange="atualizarTotal()">
+                            <button onclick="mudarQuantidade(${productIndex}, 1)">+</button>
+                        </div>
+                    `;
+                    cardapioLista.appendChild(div);
+                    allProducts.push(produto); 
+                    productIndex++;
+                });
+            }
+        }
+    }
+    
+    function mudarQuantidade(index, valor) {
+        const input = document.getElementById(`qtd-${index}`);
+        let quantidadeAtual = parseInt(input.value);
+        let novaQuantidade = quantidadeAtual + valor;
+        if (novaQuantidade < 0) novaQuantidade = 0;
+        input.value = novaQuantidade;
+        atualizarTotal();
+    }
+
+    function atualizarTotal() {
+        let totalItens = 0;
+        pedido = {};
+        allProducts.forEach((produto, index) => {
+            const quantidade = parseInt(document.getElementById(`qtd-${index}`).value);
+            if (quantidade > 0) {
+                totalItens += quantidade;
+                pedido[produto] = quantidade;
+            }
+        });
+        totalPedidoElement.textContent = `Total de itens: ${totalItens}`;
+    }
+
+    btnFinalizar.addEventListener('click', () => {
+        let mensagem = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
+        let temPedido = false;
+
+        for (const item in pedido) {
+            mensagem += `${pedido[item]}x ${item}\n`;
+            temPedido = true;
+        }
+
+        if (temPedido) {
+            const numeroTelefone = "559196069191";
+            const url = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        } else {
+            alert('Seu carrinho está vazio!');
+        }
+    });
+
+    renderizarCardapio();
+    atualizarTotal();
+</script>
+
+</body>
+</html>

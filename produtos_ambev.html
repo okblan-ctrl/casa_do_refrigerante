@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio de Produtos AMBEV</title>
+    <link rel="icon" type="image/png" href="ambev.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #011E41; /* Cor que remete à AMBEV */
+        }
+        h2 {
+            color: #011E41;
+            border-bottom: 2px solid #011E41;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        .item-cardapio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .item-cardapio:last-child {
+            border-bottom: none;
+        }
+        .item-cardapio h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .quantidade {
+            display: flex;
+            align-items: center;
+        }
+        .quantidade button {
+            background-color: #011E41;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        .quantidade input {
+            width: 40px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #total-pedido {
+            margin-top: 20px;
+            font-size: 1.3em;
+            text-align: right;
+            font-weight: bold;
+        }
+        #btn-finalizar {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #25D366; /* Cor do WhatsApp */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #btn-finalizar:hover {
+            background-color: #128C7E;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cardápio de Produtos AMBEV</h1>
+    <div id="cardapio-lista">
+    </div>
+    <div id="total-pedido">Total de itens: 0</div>
+    <button id="btn-finalizar">Finalizar Pedido via WhatsApp</button>
+</div>
+
+<script>
+    const produtos = {
+        "Cervejas": {
+            "Brahma": [
+                "Brahma Duplo Malte 600ml",
+                "Brahma Duplo Malte Long Neck 330ml",
+                "Brahma Duplo Malte Lata 350ml",
+                "Brahma Duplo Malte 300ml",
+                "Brahma Chopp 600ml",
+                "Brahma Chopp Litrão 1L",
+                "Brahma Chopp Lata 350ml",
+                "Brahma Chopp 300ml",
+                "Brahma Chopp Long Neck 330ml"
+            ],
+            "Skol": [
+                "Skol Pilsen 600ml",
+                "Skol Pilsen Litrão 1L",
+                "Skol Pilsen Lata 350ml",
+                "Skol Pilsen Lata 269ml",
+                "Skol Puro Malte Lata 350ml",
+                "Skolzinha 300ml Promoção"
+            ],
+            "Budweiser": [
+                "Budweiser 600ml",
+                "Budweiser Long Neck 330ml",
+                "Budweiser Lata 350ml",
+                "Budweiser Zero Lata 350ml"
+            ],
+            "Corona": [
+                "Corona Long Neck 330ml",
+                "Corona Lata 350ml"
+            ]
+        },
+        "Refrigerantes e Águas": {
+            "Guaraná Antarctica": [
+                "Guaraná Antarctica Pet 2L",
+                "Guaraná Antarctica Lata 350ml",
+                "Guaraná Antarctica Pet 200ml",
+                "Guaraná Antarctica Zero Pet 2L",
+                "Guaraná Antarctica Zero Lata 350ml",
+                "Guaraná Antarctica Zero Pet 200ml"
+            ],
+            "Pepsi": [
+                "Pepsi Pet 2L",
+                "Pepsi Lata 350ml",
+                "Pepsi Pet 200ml",
+                "Pepsi Twist Pet 2L",
+                "Pepsi Twist Lata 350ml",
+                "Pepsi Black Pet 2L",
+                "Pepsi Black Lata 350ml",
+                "Pepsi Zero Pet 200ml"
+            ],
+            "H2OH!": [
+                "H2OH! Limoneto Pet 500ml",
+                "H2OH! Laranja Pet 500ml"
+            ],
+            "Sukita": [
+                "Sukita Laranja Pet 2L",
+                "Sukita Laranja Lata 350ml",
+                "Sukita Uva Pet 2L",
+                "Sukita Uva Lata 350ml"
+            ],
+            "Água Mineral": [
+                "Água Mineral 500ml",
+                "Água Mineral 1.5L"
+            ]
+        }
+    };
+    
+    const cardapioLista = document.getElementById('cardapio-lista');
+    const totalPedidoElement = document.getElementById('total-pedido');
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    let pedido = {};
+    let allProducts = [];
+
+    function renderizarCardapio() {
+        cardapioLista.innerHTML = '';
+        allProducts = []; 
+        let productIndex = 0;
+
+        for (const secao in produtos) {
+            const h1Secao = document.createElement('h1');
+            h1Secao.textContent = secao;
+            cardapioLista.appendChild(h1Secao);
+
+            for (const categoria in produtos[secao]) {
+                const h2 = document.createElement('h2');
+                h2.textContent = categoria;
+                cardapioLista.appendChild(h2);
+
+                produtos[secao][categoria].forEach(produto => {
+                    const div = document.createElement('div');
+                    div.classList.add('item-cardapio');
+                    div.innerHTML = `
+                        <h3>${produto}</h3>
+                        <div class="quantidade">
+                            <button onclick="mudarQuantidade(${productIndex}, -1)">-</button>
+                            <input type="number" id="qtd-${productIndex}" value="0" min="0" onchange="atualizarTotal()">
+                            <button onclick="mudarQuantidade(${productIndex}, 1)">+</button>
+                        </div>
+                    `;
+                    cardapioLista.appendChild(div);
+                    allProducts.push(produto); 
+                    productIndex++;
+                });
+            }
+        }
+    }
+    
+    function mudarQuantidade(index, valor) {
+        const input = document.getElementById(`qtd-${index}`);
+        let quantidadeAtual = parseInt(input.value);
+        let novaQuantidade = quantidadeAtual + valor;
+        if (novaQuantidade < 0) novaQuantidade = 0;
+        input.value = novaQuantidade;
+        atualizarTotal();
+    }
+
+    function atualizarTotal() {
+        let totalItens = 0;
+        pedido = {};
+        allProducts.forEach((produto, index) => {
+            const quantidade = parseInt(document.getElementById(`qtd-${index}`).value);
+            if (quantidade > 0) {
+                totalItens += quantidade;
+                pedido[produto] = quantidade;
+            }
+        });
+        totalPedidoElement.textContent = `Total de itens: ${totalItens}`;
+    }
+
+    btnFinalizar.addEventListener('click', () => {
+        let mensagem = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
+        let temPedido = false;
+
+        for (const item in pedido) {
+            mensagem += `${pedido[item]}x ${item}\n`;
+            temPedido = true;
+        }
+
+        if (temPedido) {
+            const numeroTelefone = "559196069191";
+            const url = `https://wa.me/${numeroTelefone}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        } else {
+            alert('Seu carrinho está vazio!');
+        }
+    });
+
+    renderizarCardapio();
+    atualizarTotal();
+</script>
+
+</body>
+</html>
